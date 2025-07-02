@@ -1,15 +1,4 @@
-// import dotenv from "dotenv"
-// import express from "express"
-// import connectDB from "./src/db/db.js";
 
-// dotenv.config()
-// connectDB()
-
-// const app = express();
-
-// app.listen(process.env.PORT || 8000, ()=>{
-//     console.log(`Server running on port : ${process.env.PORT}`)
-// })
 import mongoose from "mongoose";
 
 import dotenv from "dotenv";
@@ -18,7 +7,8 @@ import connectDB from "./src/db/db.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import { Student } from "./models/student.models.js";
-import { Event } from "./models/event.model.js"; // optional now
+import { Event } from "./models/event.model.js";
+import { sendConfirmationEmail } from "./src/db/utils/mail.js";
 dotenv.config();
 
 connectDB();
@@ -40,31 +30,45 @@ app.post("/register", async (req, res) => {
     try {
         const { participatedIn, ...rest } = req.body;
 
+        // Create student with linked event ID
         const student = await Student.create({
             ...rest,
             participatedIn: new mongoose.Types.ObjectId(participatedIn),
         });
 
-        res.redirect("/students.html"); // success case
+        // Fetch full event details
+        const event = await Event.findById(participatedIn);
+
+        // ✅ Send confirmation email with logging
+        console.log("📩 Attempting to send email to:", student.email);
+        await sendConfirmationEmail(student, event);
+        console.log("✅ Email sent successfully to:", student.email);
+
+        // Redirect on success
+        res.redirect("/students.html");
 
     } catch (err) {
-        console.error("❌ Error occurred during registration:", err); // log full error
+        console.error("❌ Registration error:", err);
 
+        // Duplicate entry handler
         if (err.code === 11000) {
-            const duplicateField = Object.keys(err.keyPattern)[0];
-            res.status(400).send(`
-      <h3 style="color: red;">Error: A student with that ${duplicateField} already exists!</h3>
-      <a href="/student.html">Go back to form</a>
-    `);
-        } else {
-            res.status(500).send(`
-      <h3 style="color: red;">An unexpected error occurred.</h3>
-      <pre>${err.message}</pre>
-      <a href="/student.html">Go back to form</a>
-    `);
+            const field = Object.keys(err.keyPattern)[0];
+            return res.status(400).send(`
+                <h3 style="color:red;">Error: A student with this ${field} already exists!</h3>
+                <a href="/student.html">Go back to form</a>
+            `);
         }
+
+        // Generic error
+        res.status(500).send(`
+            <h3 style="color:red;">An unexpected error occurred.</h3>
+            <pre>${err.message}</pre>
+            <a href="/student.html">Go back to form</a>
+        `);
     }
 });
+
+
 
 // Return all registered students
 app.get("/students", async (req, res) => {

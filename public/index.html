@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,13 +16,13 @@
       --success-color: #4bb543;
       --error-color: #ff3333;
     }
-    
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-    
+
     body {
       font-family: 'Poppins', sans-serif;
       background-color: #f5f7fa;
@@ -33,7 +34,7 @@
       display: flex;
       flex-direction: column;
     }
-    
+
     .container {
       max-width: 700px;
       margin: auto;
@@ -44,7 +45,7 @@
       overflow-y: auto;
       max-height: 90vh;
     }
-    
+
     h2 {
       color: var(--primary-color);
       text-align: center;
@@ -52,11 +53,11 @@
       font-weight: 600;
       font-size: 1.5rem;
     }
-    
+
     .form-group {
       margin-bottom: 15px;
     }
-    
+
     label {
       display: block;
       margin-bottom: 6px;
@@ -64,8 +65,9 @@
       color: var(--dark-color);
       font-size: 0.9rem;
     }
-    
-    input, select {
+
+    input,
+    select {
       width: 100%;
       padding: 10px 12px;
       border: 1px solid #ddd;
@@ -73,22 +75,23 @@
       font-size: 0.9rem;
       transition: border 0.3s ease;
     }
-    
-    input:focus, select:focus {
+
+    input:focus,
+    select:focus {
       outline: none;
       border-color: var(--accent-color);
       box-shadow: 0 0 0 2px rgba(72, 149, 239, 0.2);
     }
-    
+
     .form-row {
       display: flex;
       gap: 15px;
     }
-    
+
     .form-row .form-group {
       flex: 1;
     }
-    
+
     button {
       background-color: var(--primary-color);
       color: white;
@@ -102,11 +105,11 @@
       width: 100%;
       margin-top: 5px;
     }
-    
+
     button:hover {
       background-color: var(--secondary-color);
     }
-    
+
     .view-link {
       display: block;
       text-align: center;
@@ -117,34 +120,34 @@
       transition: color 0.3s ease;
       font-size: 0.9rem;
     }
-    
+
     .view-link:hover {
       color: var(--secondary-color);
       text-decoration: underline;
     }
-    
+
     .required-field::after {
       content: " *";
       color: var(--error-color);
     }
-    
+
     @media (max-width: 768px) {
       body {
         padding: 15px;
         height: auto;
         overflow: auto;
       }
-      
+
       .container {
         max-height: none;
         padding: 20px;
       }
-      
+
       .form-row {
         flex-direction: column;
         gap: 0;
       }
-      
+
       h2 {
         font-size: 1.3rem;
         margin-bottom: 15px;
@@ -152,10 +155,12 @@
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <h2>Student Event Registration</h2>
     <form action="/register" method="POST">
+
       <div class="form-row">
         <div class="form-group">
           <label for="name" class="required-field">Full Name</label>
@@ -166,7 +171,7 @@
           <input type="text" id="studentId" name="studentId" placeholder="Enter your student ID" required>
         </div>
       </div>
-      
+
       <div class="form-row">
         <div class="form-group">
           <label for="age" class="required-field">Age</label>
@@ -177,7 +182,7 @@
           <input type="email" id="email" name="email" placeholder="Enter your email" required>
         </div>
       </div>
-      
+
       <div class="form-row">
         <div class="form-group">
           <label for="phoneNumber" class="required-field">Phone Number</label>
@@ -188,12 +193,12 @@
           <input type="text" id="department" name="department" placeholder="Enter your department" required>
         </div>
       </div>
-      
+
       <div class="form-group">
         <label for="class" class="required-field">Class</label>
         <input type="text" id="class" name="class" placeholder="Enter your class" required>
       </div>
-      
+
       <div class="form-group">
         <label for="participatedIn" class="required-field">Select Event</label>
         <select id="participatedIn" name="participatedIn" required>
@@ -205,11 +210,12 @@
           <option value="6864f9ade0ae01ce0c5620aa">Dance</option>
         </select>
       </div>
-      
+
       <button type="submit">Register Now</button>
     </form>
-    
+
     <a href="/students.html" class="view-link">View Registered Students →</a>
   </div>
 </body>
+
 </html>
