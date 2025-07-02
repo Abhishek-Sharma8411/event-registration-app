@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Registered Students</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .student {
+      border: 1px solid #ddd;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Registered Student List</h2>
+  <div id="list"></div>
+
+  <a href="/index.html">Go to register page</a>
+  <script>
+    fetch("/students")
+      .then(res => res.json())
+      .then(data => {
+        const div = document.getElementById("list");
+        if (data.length === 0) {
+          div.innerHTML = "<p>No students registered yet.</p>";
+          return;
+        }
+
+        data.forEach(s => {
+          div.innerHTML += `
+            <div class="student">
+              <strong>Name:</strong> ${s.name}<br>
+              <strong>Student ID:</strong> ${s.studentId}<br>
+              <strong>Age:</strong> ${s.age}<br>
+              <strong>Email:</strong> ${s.email}<br>
+              <strong>Phone:</strong> ${s.phoneNumber}<br>
+              <strong>Department:</strong> ${s.department}<br>
+              <strong>Class:</strong> ${s.class}<br>
+              <strong>Event:</strong> ${s.participatedIn?.title || "N/A"}<br>
+              <small>Registered on: ${new Date(s.createdAt).toLocaleString()}</small>
+            </div>
+          `;
+        });
+      });
+  </script>
+</body>
+</html>
