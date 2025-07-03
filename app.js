@@ -1,6 +1,5 @@
-
 import mongoose from "mongoose";
-
+import session from "express-session";
 import dotenv from "dotenv";
 import express from "express";
 import connectDB from "./src/db/db.js";
@@ -20,10 +19,47 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 app.use(express.static(path.join(__dirname, "public")));
 
+
+
+
 app.get("/events", async (req, res) => {
     const events = await Event.find();
     res.json(events);
 });
+
+// Session config
+app.use(session({
+    secret: process.env.ADMIN_SECRET || "supersecretkey",
+    resave: false,
+    saveUninitialized: true,
+}));
+
+// Serve login page
+app.get("/admin-login", (req, res) => {
+    res.sendFile("admin-login.html", { root: "public" });
+});
+
+// Handle login form POST
+app.post("/admin-login", (req, res) => {
+    const { password } = req.body;
+    if (password === process.env.ADMIN_PASSWORD) {
+        req.session.admin = true;
+        res.redirect("/admin.html");
+    } else {
+        res.send("<h3>Incorrect Password</h3><a href='/admin-login'>Try again</a>");
+    }
+});
+
+// Protect /admin route
+app.get("/admin", (req, res) => {
+    if (req.session.admin) {
+        res.sendFile("/admin.html", { root: "public" });
+    } else {
+        res.redirect("/admin-login");
+    }
+});
+
+// app.use("/admin", adminRoutes);
 
 // Handle student form submission
 app.post("/register", async (req, res) => {
@@ -45,7 +81,7 @@ app.post("/register", async (req, res) => {
         console.log("✅ Email sent successfully to:", student.email);
 
         // Redirect on success
-        res.redirect("/students.html");
+        res.redirect("/thanks.html");
 
     } catch (err) {
         console.error("❌ Registration error:", err);
