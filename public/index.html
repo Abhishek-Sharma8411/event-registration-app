@@ -202,12 +202,7 @@
       <div class="form-group">
         <label for="participatedIn" class="required-field">Select Event</label>
         <select id="participatedIn" name="participatedIn" required>
-          <option value="">-- Select an event --</option>
-          <option value="6864e7a2e0ae01ce0c562087">Tech Fest 2023</option>
-          <option value="6864f527e0ae01ce0c562094">Hackathon</option>
-          <option value="6864f9e6e0ae01ce0c5620ac">Fashion Show</option>
-          <option value="6864f9d6e0ae01ce0c5620ab">Singing</option>
-          <option value="6864f9ade0ae01ce0c5620aa">Dance</option>
+          <option value="">-- Loading events... --</option>
         </select>
       </div>
 
@@ -217,6 +212,31 @@
     <!-- <a href="/students.html" class="view-link">View Registered Students →</a> -->
     <a href="/admin-login.html" class="view-link">View admin →</a>
   </div>
+
+  <script>
+// Load events when page loads
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const response = await fetch('/events');
+    const events = await response.json();
+    
+    const select = document.getElementById('participatedIn');
+    select.innerHTML = '<option value="">-- Select an event --</option>';
+    
+    events.forEach(event => {
+      const option = document.createElement('option');
+      option.value = event._id;
+      option.textContent = event.title;
+      select.appendChild(option);
+    });
+    
+  } catch (error) {
+    console.error('Error loading events:', error);
+    const select = document.getElementById('participatedIn');
+    select.innerHTML = '<option value="">-- Error loading events --</option>';
+  }
+});
+</script>
 </body>
 
 </html>

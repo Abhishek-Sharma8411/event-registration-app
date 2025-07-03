@@ -59,6 +59,44 @@ app.get("/admin", (req, res) => {
     }
 });
 
+
+// Enable JSON body parsing (MUST be before your routes)
+app.use(express.json());
+
+// Get all events
+app.get('/api/events', async (req, res) => {
+    try {
+        const events = await Event.find().sort({ createdAt: -1 });
+        res.json(events);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Create or Update event
+app.post('/api/events', async (req, res) => {
+    try {
+        let event;
+        if (req.body._id) {
+            event = await Event.findByIdAndUpdate(req.body._id, req.body, { new: true });
+        } else {
+            event = await Event.create(req.body);
+        }
+        res.json({ success: true, event });
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+});
+
+// Delete event
+app.delete('/api/events/:id', async (req, res) => {
+    try {
+        await Event.findByIdAndDelete(req.params.id);
+        res.json({ success: true });
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+});
 // app.use("/admin", adminRoutes);
 
 // Handle student form submission
