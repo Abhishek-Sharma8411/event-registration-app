@@ -129,7 +129,7 @@ app.post("/register", async (req, res) => {
             const field = Object.keys(err.keyPattern)[0];
             return res.status(400).send(`
                 <h3 style="color:red;">Error: A student with this ${field} already exists!</h3>
-                <a href="/student.html">Go back to form</a>
+                <a href="/index.html">Go back to form</a>
             `);
         }
 
